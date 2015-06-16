@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="ActiveSessions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="token" Type="nchar" MaxLength="15" Nullable="false" />
+    <Property Name="login" Type="numeric" Precision="6" Scale="0" Nullable="false" />
+    <Property Name="InvalidDateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="login">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="numeric" Precision="6" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userNumber" Type="numeric" Precision="6" Scale="0" Nullable="false" />
+    <Property Name="userName" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="pass" Type="text" Nullable="false" />
+    <Property Name="salt" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="orderdetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="orderNumber" Type="int" Nullable="false" />
+    <Property Name="productId" Type="numeric" Precision="8" Scale="0" Nullable="false" />
+    <Property Name="quantityOrdered" Type="int" Nullable="false" />
+    <Property Name="total" Type="money" Nullable="false" />
+  </EntityType>
+  <EntityType Name="orders">
+    <Key>
+      <PropertyRef Name="orderNumber" />
+    </Key>
+    <Property Name="orderNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="orderDate" Type="date" Nullable="false" />
+    <Property Name="requiredDate" Type="date" />
+    <Property Name="shippedDate" Type="date" />
+    <Property Name="status" Type="nchar" MaxLength="10" />
+    <Property Name="comments" Type="text" />
+    <Property Name="userNumber" Type="numeric" Precision="6" Scale="0" Nullable="false" />
+  </EntityType>
+  <EntityType Name="products">
+    <Key>
+      <PropertyRef Name="productId" />
+    </Key>
+    <Property Name="productId" Type="numeric" Precision="8" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="productName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="buyPrice" Type="money" Nullable="false" />
+    <Property Name="MSRP" Type="money" />
+    <Property Name="description" Type="ntext" />
+    <Property Name="quantityInStock" Type="smallint" Nullable="false" />
+    <Property Name="productVendor" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="userNumber" />
+    </Key>
+    <Property Name="userNumber" Type="numeric" Precision="6" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="userLastName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="userFirstName" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="phone" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="addressLine1" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="addressLine2" Type="varchar" MaxLength="50" />
+    <Property Name="city" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="state" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="postalCode" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="country" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="email" Type="varchar" MaxLength="50" />
+    <Property Name="isAdmin" Type="bit" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_ActiveSessions_ToTable">
+    <End Role="login" Type="Self.login" Multiplicity="1" />
+    <End Role="ActiveSessions" Type="Self.ActiveSessions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="login">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ActiveSessions">
+        <PropertyRef Name="login" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_orderNumber">
+    <End Role="orders" Type="Self.orders" Multiplicity="1" />
+    <End Role="orderdetails" Type="Self.orderdetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="orders">
+        <PropertyRef Name="orderNumber" />
+      </Principal>
+      <Dependent Role="orderdetails">
+        <PropertyRef Name="orderNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_productId">
+    <End Role="products" Type="Self.products" Multiplicity="1" />
+    <End Role="orderdetails" Type="Self.orderdetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="products">
+        <PropertyRef Name="productId" />
+      </Principal>
+      <Dependent Role="orderdetails">
+        <PropertyRef Name="productId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_userNumber">
+    <End Role="users" Type="Self.users" Multiplicity="1" />
+    <End Role="login" Type="Self.login" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="userNumber" />
+      </Principal>
+      <Dependent Role="login">
+        <PropertyRef Name="userNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_userNumberToOrder">
+    <End Role="users" Type="Self.users" Multiplicity="1" />
+    <End Role="orders" Type="Self.orders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="userNumber" />
+      </Principal>
+      <Dependent Role="orders">
+        <PropertyRef Name="userNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DatabaseModelStoreContainer">
+    <EntitySet Name="ActiveSessions" EntityType="Self.ActiveSessions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="login" EntityType="Self.login" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="orderdetails" EntityType="Self.orderdetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="orders" EntityType="Self.orders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="products" EntityType="Self.products" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_ActiveSessions_ToTable" Association="Self.FK_ActiveSessions_ToTable">
+      <End Role="login" EntitySet="login" />
+      <End Role="ActiveSessions" EntitySet="ActiveSessions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_orderNumber" Association="Self.FK_orderNumber">
+      <End Role="orders" EntitySet="orders" />
+      <End Role="orderdetails" EntitySet="orderdetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_productId" Association="Self.FK_productId">
+      <End Role="products" EntitySet="products" />
+      <End Role="orderdetails" EntitySet="orderdetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_userNumber" Association="Self.FK_userNumber">
+      <End Role="users" EntitySet="users" />
+      <End Role="login" EntitySet="login" />
+    </AssociationSet>
+    <AssociationSet Name="FK_userNumberToOrder" Association="Self.FK_userNumberToOrder">
+      <End Role="users" EntitySet="users" />
+      <End Role="orders" EntitySet="orders" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

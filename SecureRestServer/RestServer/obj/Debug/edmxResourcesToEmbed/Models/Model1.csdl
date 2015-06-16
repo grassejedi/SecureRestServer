@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="orderdetail">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="orderNumber" Type="Int32" Nullable="false" />
+    <Property Name="productId" Type="Decimal" Precision="8" Scale="0" Nullable="false" />
+    <Property Name="quantityOrdered" Type="Int32" Nullable="false" />
+    <Property Name="total" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <NavigationProperty Name="order" Relationship="Self.FK_orderNumber" FromRole="orderdetails" ToRole="orders" />
+    <NavigationProperty Name="product" Relationship="Self.FK_productId" FromRole="orderdetails" ToRole="products" />
+  </EntityType>
+  <EntityType Name="order">
+    <Key>
+      <PropertyRef Name="orderNumber" />
+    </Key>
+    <Property Name="orderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="orderDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="requiredDate" Type="DateTime" Precision="0" />
+    <Property Name="shippedDate" Type="DateTime" Precision="0" />
+    <Property Name="status" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="userNumber" Type="Decimal" Precision="6" Scale="0" Nullable="false" />
+    <NavigationProperty Name="orderdetails" Relationship="Self.FK_orderNumber" FromRole="orders" ToRole="orderdetails" />
+    <NavigationProperty Name="user" Relationship="Self.FK_userNumberToOrder" FromRole="orders" ToRole="users" />
+  </EntityType>
+  <EntityType Name="product">
+    <Key>
+      <PropertyRef Name="productId" />
+    </Key>
+    <Property Name="productId" Type="Decimal" Precision="8" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="productName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="buyPrice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="MSRP" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="quantityInStock" Type="Int16" Nullable="false" />
+    <Property Name="productVendor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="orderdetails" Relationship="Self.FK_productId" FromRole="products" ToRole="orderdetails" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="userNumber" />
+    </Key>
+    <Property Name="userNumber" Type="Decimal" Precision="6" Scale="0" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="userFirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="phone" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+    <Property Name="addressLine1" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="addressLine2" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="postalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="isAdmin" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="orders" Relationship="Self.FK_userNumberToOrder" FromRole="users" ToRole="orders" />
+    <NavigationProperty Name="logins" Relationship="DatabaseModel.FK_userNumber" FromRole="user" ToRole="login" />
+  </EntityType>
+  <Association Name="FK_orderNumber">
+    <End Role="orders" Type="Self.order" Multiplicity="1" />
+    <End Role="orderdetails" Type="Self.orderdetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="orders">
+        <PropertyRef Name="orderNumber" />
+      </Principal>
+      <Dependent Role="orderdetails">
+        <PropertyRef Name="orderNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_productId">
+    <End Role="products" Type="Self.product" Multiplicity="1" />
+    <End Role="orderdetails" Type="Self.orderdetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="products">
+        <PropertyRef Name="productId" />
+      </Principal>
+      <Dependent Role="orderdetails">
+        <PropertyRef Name="productId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_userNumberToOrder">
+    <End Role="users" Type="Self.user" Multiplicity="1" />
+    <End Role="orders" Type="Self.order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="users">
+        <PropertyRef Name="userNumber" />
+      </Principal>
+      <Dependent Role="orders">
+        <PropertyRef Name="userNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DatabaseEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="orderdetails" EntityType="Self.orderdetail" />
+    <EntitySet Name="orders" EntityType="Self.order" />
+    <EntitySet Name="products" EntityType="Self.product" />
+    <EntitySet Name="users" EntityType="Self.user" />
+    <AssociationSet Name="FK_orderNumber" Association="Self.FK_orderNumber">
+      <End Role="orders" EntitySet="orders" />
+      <End Role="orderdetails" EntitySet="orderdetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_productId" Association="Self.FK_productId">
+      <End Role="products" EntitySet="products" />
+      <End Role="orderdetails" EntitySet="orderdetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_userNumberToOrder" Association="Self.FK_userNumberToOrder">
+      <End Role="users" EntitySet="users" />
+      <End Role="orders" EntitySet="orders" />
+    </AssociationSet>
+    <EntitySet Name="ActiveSessions" EntityType="DatabaseModel.ActiveSession" />
+    <EntitySet Name="logins" EntityType="DatabaseModel.login" />
+    <AssociationSet Name="FK_ActiveSessions_ToTable" Association="DatabaseModel.FK_ActiveSessions_ToTable">
+      <End Role="login" EntitySet="logins" />
+      <End Role="ActiveSession" EntitySet="ActiveSessions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_userNumber" Association="DatabaseModel.FK_userNumber">
+      <End Role="user" EntitySet="users" />
+      <End Role="login" EntitySet="logins" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="ActiveSession">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="token" Type="String" Nullable="false" MaxLength="15" FixedLength="true" Unicode="true" />
+    <Property Name="login" Type="Decimal" Nullable="false" Precision="6" Scale="0" />
+    <Property Name="InvalidDateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="login1" Relationship="DatabaseModel.FK_ActiveSessions_ToTable" FromRole="ActiveSession" ToRole="login" />
+  </EntityType>
+  <EntityType Name="login">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Decimal" Nullable="false" Precision="6" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userNumber" Type="Decimal" Nullable="false" Precision="6" Scale="0" />
+    <Property Name="userName" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="pass" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="salt" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="ActiveSessions" Relationship="DatabaseModel.FK_ActiveSessions_ToTable" FromRole="login" ToRole="ActiveSession" />
+    <NavigationProperty Name="user" Relationship="DatabaseModel.FK_userNumber" FromRole="login" ToRole="user" />
+  </EntityType>
+  <Association Name="FK_ActiveSessions_ToTable">
+    <End Type="DatabaseModel.login" Role="login" Multiplicity="1" />
+    <End Type="DatabaseModel.ActiveSession" Role="ActiveSession" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="login">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ActiveSession">
+        <PropertyRef Name="login" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_userNumber">
+    <End Type="DatabaseModel.user" Role="user" Multiplicity="1" />
+    <End Type="DatabaseModel.login" Role="login" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="userNumber" />
+      </Principal>
+      <Dependent Role="login">
+        <PropertyRef Name="userNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

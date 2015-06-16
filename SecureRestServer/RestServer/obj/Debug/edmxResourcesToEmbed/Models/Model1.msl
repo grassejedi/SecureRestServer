@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DatabaseModelStoreContainer" CdmEntityContainer="DatabaseEntities">
+    <EntitySetMapping Name="orderdetails">
+      <EntityTypeMapping TypeName="DatabaseModel.orderdetail">
+        <MappingFragment StoreEntitySet="orderdetails">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="orderNumber" ColumnName="orderNumber" />
+          <ScalarProperty Name="productId" ColumnName="productId" />
+          <ScalarProperty Name="quantityOrdered" ColumnName="quantityOrdered" />
+          <ScalarProperty Name="total" ColumnName="total" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="orders">
+      <EntityTypeMapping TypeName="DatabaseModel.order">
+        <MappingFragment StoreEntitySet="orders">
+          <ScalarProperty Name="orderNumber" ColumnName="orderNumber" />
+          <ScalarProperty Name="orderDate" ColumnName="orderDate" />
+          <ScalarProperty Name="requiredDate" ColumnName="requiredDate" />
+          <ScalarProperty Name="shippedDate" ColumnName="shippedDate" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="comments" ColumnName="comments" />
+          <ScalarProperty Name="userNumber" ColumnName="userNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="products">
+      <EntityTypeMapping TypeName="DatabaseModel.product">
+        <MappingFragment StoreEntitySet="products">
+          <ScalarProperty Name="productId" ColumnName="productId" />
+          <ScalarProperty Name="productName" ColumnName="productName" />
+          <ScalarProperty Name="buyPrice" ColumnName="buyPrice" />
+          <ScalarProperty Name="MSRP" ColumnName="MSRP" />
+          <ScalarProperty Name="description" ColumnName="description" />
+          <ScalarProperty Name="quantityInStock" ColumnName="quantityInStock" />
+          <ScalarProperty Name="productVendor" ColumnName="productVendor" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="users">
+      <EntityTypeMapping TypeName="DatabaseModel.user">
+        <MappingFragment StoreEntitySet="users">
+          <ScalarProperty Name="userNumber" ColumnName="userNumber" />
+          <ScalarProperty Name="userLastName" ColumnName="userLastName" />
+          <ScalarProperty Name="userFirstName" ColumnName="userFirstName" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="phone" ColumnName="phone" />
+          <ScalarProperty Name="addressLine1" ColumnName="addressLine1" />
+          <ScalarProperty Name="addressLine2" ColumnName="addressLine2" />
+          <ScalarProperty Name="city" ColumnName="city" />
+          <ScalarProperty Name="state" ColumnName="state" />
+          <ScalarProperty Name="postalCode" ColumnName="postalCode" />
+          <ScalarProperty Name="country" ColumnName="country" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="isAdmin" ColumnName="isAdmin" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ActiveSessions">
+      <EntityTypeMapping TypeName="DatabaseModel.ActiveSession">
+        <MappingFragment StoreEntitySet="ActiveSessions">
+          <ScalarProperty Name="InvalidDateTime" ColumnName="InvalidDateTime" />
+          <ScalarProperty Name="login" ColumnName="login" />
+          <ScalarProperty Name="token" ColumnName="token" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="logins">
+      <EntityTypeMapping TypeName="DatabaseModel.login">
+        <MappingFragment StoreEntitySet="login">
+          <ScalarProperty Name="salt" ColumnName="salt" />
+          <ScalarProperty Name="pass" ColumnName="pass" />
+          <ScalarProperty Name="userName" ColumnName="userName" />
+          <ScalarProperty Name="userNumber" ColumnName="userNumber" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
